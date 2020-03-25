@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core'
 import { DateRange } from '../../models'
 import { of } from 'rxjs'
-import { map } from 'rxjs/operators'
-import { getWeeksInMonth } from '../../helpers'
+import { Month } from '../../models/month'
 
 @Component({
   selector: 'app-datepicker',
@@ -23,5 +22,8 @@ export class DatepickerComponent {
   @Input()
   public dayTemplateRef: TemplateRef<any>
 
-  constructor() { }
+  constructor() {
+    const month = new Month(new Date())
+    console.log(month)
+  }
 }
