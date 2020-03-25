@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core'
 import { DateRange } from '../../models'
-import { of } from 'rxjs'
 import { Month } from '../../models/month'
 
 @Component({
@@ -11,7 +10,7 @@ import { Month } from '../../models/month'
 })
 export class DatepickerComponent {
 
-  public now$ = of(new Date())
+  public month = new Month(new Date())
 
   @Input()
   public value: DateRange = {
@@ -20,10 +19,15 @@ export class DatepickerComponent {
   }
 
   @Input()
+  public monthDisplay: number
+
+  @Input()
   public dayTemplateRef: TemplateRef<any>
 
+  @Output()
+  public dateSelect = new EventEmitter()
+
   constructor() {
-    const month = new Month(new Date())
-    console.log(month)
+    console.log(this.month)
   }
 }
