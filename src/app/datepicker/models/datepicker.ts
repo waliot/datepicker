@@ -1,11 +1,11 @@
-export interface DateRange {
+export interface TimeRange {
   start: Date
   end: Date
 }
 
 export interface DatepickerOptions {
   displayMonth: number
-  initialValue?: DateRange
+  initialValue?: TimeRange
 }
 
 export const DEFAULT_DATEPICKER_OPTIONS: Partial<DatepickerOptions> = {

@@ -1,11 +1,17 @@
 import { BehaviorSubject } from 'rxjs'
+import { addMonths, subMonths } from 'date-fns'
+
 import { Month } from './month'
-import { DatepickerOptions, DEFAULT_DATEPICKER_OPTIONS } from './datepicker'
-import { addMonths, subMonths } from "date-fns"
+import { DatepickerOptions, TimeRange, DEFAULT_DATEPICKER_OPTIONS } from './datepicker'
 
 export class DatepickerController {
   private options: DatepickerOptions
+
   public readonly months$ = new BehaviorSubject<Month[]>([])
+  public readonly selectedRange$ = new BehaviorSubject<TimeRange>({
+    start: new Date(),
+    end:   new Date()
+  })
 
   constructor(options: DatepickerOptions) {
     this.options = Object.assign(DEFAULT_DATEPICKER_OPTIONS, options)
@@ -38,5 +44,13 @@ export class DatepickerController {
     if (count === 0 || count === null || typeof count === 'undefined') return
     const newMonths = this.months$.value.map(month => new Month(subMonths(month.date, count)))
     this.months$.next(newMonths)
+  }
+
+  public jumpTo(date: Date) {
+
+  }
+
+  public select(range: TimeRange) {
+
   }
 }

@@ -16,9 +16,28 @@ export enum MonthName {
   dec = 'DECEMBER'
 }
 
+const monthTranslate = {
+  [ MonthName.jan ]: 'Январь',
+  [ MonthName.feb ]: 'Февраль',
+  [ MonthName.mar ]: 'Март',
+  [ MonthName.apr ]: 'Апрель',
+  [ MonthName.may ]: 'Май',
+  [ MonthName.jun ]: 'Июнь',
+  [ MonthName.jul ]: 'Июль',
+  [ MonthName.aug ]: 'Август',
+  [ MonthName.sep ]: 'Сентябрь',
+  [ MonthName.oct ]: 'Октябрь',
+  [ MonthName.nov ]: 'Ноябрь',
+  [ MonthName.dec ]: 'Декабрь'
+}
+
 export class Month {
   public weeks: Week[] = []
   public name: MonthName
+
+  public get nameForView() {
+    return `${ monthTranslate[ this.name ] }, ${ format(this.date, 'y') }`
+  }
 
   constructor(public date: Date) {
     this.name = format(date, 'MMMM').toUpperCase() as MonthName
