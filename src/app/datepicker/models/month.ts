@@ -20,7 +20,7 @@ export class Month {
   public weeks: Week[] = []
   public name: MonthName
 
-  constructor(date: Date) {
+  constructor(public date: Date) {
     this.name = format(date, 'MMMM').toUpperCase() as MonthName
 
     const startMonth = startOfMonth(date)

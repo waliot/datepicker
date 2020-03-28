@@ -1,11 +1,14 @@
 <div class="datepicker">
   <div class="header">
-
+    <button (click)="prevMonth()">prev</button>
+    <button (click)="nextMoth()">next</button>
   </div>
-  <div class="main">
-    <div class="week" *ngFor="let week of month.weeks">
-      <div class="day" *ngFor="let day of week.days">{{ day.date.getDate() }}</div>
-    </div>
+  <div class="content">
+    <app-datepicker-month
+      *ngFor="let month of controller.months$ | async"
+      [month]="month"
+      (select)="daySelectHandler($event)"
+    ></app-datepicker-month>
   </div>
   <div class="footer">
 

@@ -1,0 +1,7 @@
+<div class="week" *ngFor="let week of month.weeks">
+  <button
+    class="day"
+    (click)="selectDay(day)"
+    *ngFor="let day of week.days"
+  >{{ day.date.getDate() }}</button>
+</div>

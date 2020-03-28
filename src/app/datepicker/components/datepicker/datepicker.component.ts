@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core'
-import { DateRange } from '../../models'
+import { DatepickerController, DateRange } from '../../models'
+import { BehaviorSubject } from 'rxjs'
 import { Month } from '../../models/month'
+import { addMonths } from 'date-fns'
+import { Day } from '../../models/day'
 
 @Component({
   selector: 'app-datepicker',
@@ -10,16 +13,8 @@ import { Month } from '../../models/month'
 })
 export class DatepickerComponent {
 
-  public month = new Month(new Date())
-
   @Input()
-  public value: DateRange = {
-    from: new Date(),
-    to: new Date()
-  }
-
-  @Input()
-  public monthDisplay: number
+  public controller: DatepickerController
 
   @Input()
   public dayTemplateRef: TemplateRef<any>
@@ -28,6 +23,17 @@ export class DatepickerComponent {
   public dateSelect = new EventEmitter()
 
   constructor() {
-    console.log(this.month)
+  }
+
+  public daySelectHandler(day: Day) {
+    this.dateSelect.emit(day)
+  }
+
+  public nextMoth() {
+    this.controller.next()
+  }
+
+  public prevMonth() {
+    this.controller.prev()
   }
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DatepickerController } from './datepicker/models'
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styles: []
 })
 export class AppComponent {
-  title = 'datepicekr';
+  public controller = new DatepickerController({
+    displayMonth: 2
+  })
 }
