@@ -8,6 +8,7 @@ import { DatepickerController } from './datepicker/models'
 })
 export class AppComponent {
   public controller = new DatepickerController({
-    displayMonth: 2
+    displayMonth: 2,
+    isRange: true
   })
 }

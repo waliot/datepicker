@@ -5,12 +5,9 @@ export interface TimeRange {
 
 export interface DatepickerOptions {
   displayMonth: number
-  initialValue?: TimeRange
+  isRange?: boolean
 }
 
 export const DEFAULT_DATEPICKER_OPTIONS: Partial<DatepickerOptions> = {
-  initialValue: {
-    start: new Date(),
-    end: new Date()
-  }
+  isRange: false
 }

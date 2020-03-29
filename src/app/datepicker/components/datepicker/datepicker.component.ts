@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core'
-import { DatepickerController, Day } from '../../models'
+import { DatepickerController, Day, TimeRange } from '../../models'
+import { defer } from 'rxjs'
+import { tap } from 'rxjs/operators'
 
 @Component({
   selector: 'app-datepicker',
@@ -15,15 +17,11 @@ export class DatepickerComponent {
   @Input()
   public dayTemplateRef: TemplateRef<any>
 
-  @Output()
-  public dateSelect = new EventEmitter()
-
   constructor() {
   }
 
   public daySelectHandler(day: Day) {
-    this.dateSelect.emit(day)
-    // this.controller.select()
+    this.controller.select(day)
   }
 
   public nextMoth() {

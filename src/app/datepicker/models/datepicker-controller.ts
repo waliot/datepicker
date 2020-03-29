@@ -1,33 +1,37 @@
 import { BehaviorSubject } from 'rxjs'
-import { addMonths, subMonths } from 'date-fns'
+import { addMonths, endOfToday, isAfter, startOfToday, subMonths, isBefore } from 'date-fns'
 
 import { Month } from './month'
-import { DatepickerOptions, TimeRange, DEFAULT_DATEPICKER_OPTIONS } from './datepicker'
+import { DatepickerOptions, DEFAULT_DATEPICKER_OPTIONS, TimeRange } from './datepicker'
+import { Day } from './day'
 
 export class DatepickerController {
   private options: DatepickerOptions
+  private tempTimeRange: TimeRange = { start: null, end: null }
 
   public readonly months$ = new BehaviorSubject<Month[]>([])
   public readonly selectedRange$ = new BehaviorSubject<TimeRange>({
-    start: new Date(),
-    end:   new Date()
+    start: startOfToday(),
+    end: endOfToday()
   })
 
   constructor(options: DatepickerOptions) {
     this.options = Object.assign(DEFAULT_DATEPICKER_OPTIONS, options)
 
+    const today = startOfToday()
+
     if (this.options.displayMonth === 0 ||
       this.options.displayMonth === null ||
       typeof this.options.displayMonth === 'undefined'
     ) {
-      this.months$.next([ new Month(this.options.initialValue.start) ])
+      this.months$.next([ new Month(today) ])
       return
     }
 
     const months = []
 
     for (let i = 0; i < this.options.displayMonth; i++) {
-      const month = new Month(addMonths(this.options.initialValue.start, i))
+      const month = new Month(addMonths(today, i))
       months.push(month)
     }
 
@@ -50,7 +54,30 @@ export class DatepickerController {
 
   }
 
-  public select(range: TimeRange) {
+  public select(day: Day) {
+    if (!this.options.isRange) {
+      this.selectedRange$.next({ start: day.date, end: day.date })
+      return
+    }
 
+
+    if (this.tempTimeRange.start === null && this.tempTimeRange.end === null) {
+      this.tempTimeRange.start = day.date
+      return
+    }
+
+    if (this.tempTimeRange.start !== null && isBefore(day.date, this.tempTimeRange.start)) {
+      this.tempTimeRange.start === day.date
+      return
+    }
+
+    if (this.tempTimeRange.start !== null &&
+        this.tempTimeRange.end === null &&
+        isAfter(day.date, this.tempTimeRange.start)) {
+      this.tempTimeRange.end = day.date
+      this.selectedRange$.next(this.tempTimeRange)
+
+      this.tempTimeRange = { start: null, end: null }
+    }
   }
 }
