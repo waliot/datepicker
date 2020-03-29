@@ -12,9 +12,10 @@
   margin: 0;
   border: none;
   background: none;
+  border: 0;
 
   &:hover {
-    background-color: brown;
+    background-color: red;
   }
 }
 
@@ -36,15 +37,23 @@ button {
 }
 
 .is-today {
-
+  border: 1px solid lightskyblue;
 }
 
 .is-in-range {
-
+  background-color: lightskyblue;
 }
 
 .is-range-edge {
+  background-color: cyan;
+}
 
+.is-range-edge-start {
+  border-radius: 7px 0 0 7px;
+}
+
+.is-range-edge-end {
+  border-radius: 0 7px 7px 0;
 }
 
 .is-in-prev-month {
@@ -53,4 +62,9 @@ button {
 
 .is-in-next-month {
 
+}
+
+.is-selected {
+  border-radius: 0;
+  background-color: lightskyblue;
 }

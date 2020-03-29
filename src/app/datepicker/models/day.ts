@@ -1,4 +1,6 @@
-import { format } from 'date-fns'
+import { ControllerData } from './datepicker'
+import { map } from 'rxjs/operators'
+import { isEqual, isToday, isWithinInterval } from 'date-fns'
 
 export enum WeekDayName {
   mon = 'MONDAY',
@@ -11,10 +13,23 @@ export enum WeekDayName {
 }
 
 export class Day {
-  public context
-  public weekDay: WeekDayName
 
-  constructor(public date: Date) {
-    this.weekDay = format(date, 'iiii').toUpperCase() as WeekDayName
+  public cssClasses$ = this.controllerData.selectedRange$.pipe(
+    map((range) => {
+      return {
+        'is-today': isToday(this.date),
+        'is-selected': range.start.getDate() === range.end.getDate() && isEqual(range.start, this.date),
+        'is-in-range': isWithinInterval(this.date, range),
+        'is-range-edge': isEqual(this.date, range.start) || isEqual(this.date, range.end),
+        'is-range-edge-start': isEqual(this.date, range.start),
+        'is-range-edge-end': isEqual(this.date, range.end),
+        // 'is-in-prev-month':
+      }
+    })
+  )
+
+  constructor(public date: Date,
+              private controllerData: ControllerData) {
+    // this.weekDay = format(date, 'iiii').toUpperCase() as WeekDayName
   }
 }

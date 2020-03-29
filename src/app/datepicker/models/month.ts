@@ -1,5 +1,6 @@
 import { Week } from './week'
 import { addWeeks, format, getISODay, getISOWeek, startOfMonth, subDays } from 'date-fns'
+import { ControllerData } from './datepicker'
 
 export enum MonthName {
   jan = 'JANUARY',
@@ -39,15 +40,16 @@ export class Month {
     return `${ monthTranslate[ this.name ] }, ${ format(this.date, 'y') }`
   }
 
-  constructor(public date: Date) {
-    this.name = format(date, 'MMMM').toUpperCase() as MonthName
+  constructor(public date: Date,
+              private controllerData: ControllerData) {
+    this.name = format(this.date, 'MMMM').toUpperCase() as MonthName
 
-    const startMonth = startOfMonth(date)
+    const startMonth = startOfMonth(this.date)
     const firstDayInMonthWeek = subDays(startMonth, getISODay(startMonth) - 1)
 
     for (let i = 0; i < 6; i++) {
       const numberOfWeek = getISOWeek(addWeeks(firstDayInMonthWeek, i))
-      const week = new Week(numberOfWeek, date.getFullYear())
+      const week = new Week(numberOfWeek, this.controllerData, this.date.getFullYear())
       this.weeks.push(week)
     }
   }

@@ -14,6 +14,7 @@
   <button
     class="day"
     (click)="selectDay(day)"
+    [ngClass]="day.cssClasses$ | async"
     *ngFor="let day of week.days"
   >{{ day.date.getDate() }}</button>
 </div>

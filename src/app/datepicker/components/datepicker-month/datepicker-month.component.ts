@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { Month } from '../../models/month'
-import { Day } from '../../models/day'
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
+import { Day, Month } from '../../models'
 
 @Component({
   selector: 'app-datepicker-month',
@@ -11,7 +10,7 @@ import { Day } from '../../models/day'
     class: 'datepicker-month'
   }
 })
-export class DatepickerMonthComponent implements OnInit {
+export class DatepickerMonthComponent {
 
   @Input()
   public month: Month
@@ -20,10 +19,6 @@ export class DatepickerMonthComponent implements OnInit {
   public select$ = new EventEmitter<Day>()
 
   constructor() { }
-
-  ngOnInit(): void {
-    console.debug(this.month)
-  }
 
   public selectDay(day: Day) {
     this.select$.emit(day)
