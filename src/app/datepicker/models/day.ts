@@ -52,4 +52,12 @@ export class Day {
   constructor(public date: Date,
               private controllerData: ControllerData) {
   }
+
+  public select() {
+
+  }
+
+  public mouseEnterHandler() {
+
+  }
 }

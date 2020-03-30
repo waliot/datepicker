@@ -1,12 +1,12 @@
 import { BehaviorSubject } from 'rxjs'
-import { addMonths, endOfToday, isAfter, isBefore, startOfToday, subMonths } from 'date-fns'
+import { addMonths, endOfDay, endOfToday, isAfter, isBefore, startOfDay, startOfToday, subMonths } from 'date-fns'
 
 import { Month } from './month'
-import { ControllerData, DatepickerOptions, DEFAULT_DATEPICKER_OPTIONS, TimeRange } from './datepicker'
+import { ControllerData, DatepickerOptions, DEFAULT_DATEPICKER_OPTIONS, isTimeRange, TimeRange } from './datepicker'
 import { Day } from './day'
 
 export class DatepickerController {
-  private options: DatepickerOptions
+  private readonly options: Readonly<DatepickerOptions>
   private tempTimeRange: TimeRange = { start: null, end: null }
 
   public readonly months$ = new BehaviorSubject<Month[]>([])
@@ -29,42 +29,80 @@ export class DatepickerController {
     console.debug(this)
   }
 
-  public next(count: number = 1) {
-    if (count === 0 || count === null || typeof count === 'undefined') return
-    const newMonths = this.months$.value.map(month => new Month(addMonths(month.date, count), this.controllerData))
+  /**
+   * @description
+   * ### Сдвиг календаря вперед
+   *
+   * Сдвиг видимой части календаря вперед
+   *
+   * @param {number} [monthsCount = 1] - Положительное целое число, на велечину которого будут сдвинут каледарь
+   */
+  public next(monthsCount: number = 1) {
+    if (monthsCount === 0 || monthsCount === null || typeof monthsCount === 'undefined') return
+    const newMonths = this.months$.value.map(month => new Month(addMonths(month.date, monthsCount), this.controllerData))
 
     this.months$.next(newMonths)
   }
 
-  public prev(count: number = 1) {
-    if (count === 0 || count === null || typeof count === 'undefined') return
-    const newMonths = this.months$.value.map(month => new Month(subMonths(month.date, count), this.controllerData))
+  /**
+   * @description
+   * ### Сдвиг календаря назад
+   *
+   * Сдвиг видимой части календаря назад
+   *
+   * @param {number} [monthsCount = 1] - Положительное целое число, на велечину которого будут сдвинут каледарь
+   */
+  public prev(monthsCount: number = 1) {
+    if (monthsCount === 0 || monthsCount === null || typeof monthsCount === 'undefined') return
+    const newMonths = this.months$.value.map(month => new Month(subMonths(month.date, monthsCount), this.controllerData))
 
     this.months$.next(newMonths)
   }
 
   public jumpTo(date: Date) {}
 
-  public select(day: Day) {
+  /**
+   * @description
+   * ### Выбор определенной даты
+   *
+   * @param {Day | TimeRange} dayOrRange - Определенный день или интервал времени
+   */
+  public select(dayOrRange: Day | TimeRange) {
+
     if (!this.options.isRange) {
-      this.selectedRange$.next({ start: day.date, end: day.date })
+
+      if (isTimeRange(dayOrRange)) {
+        console.warn(`[ ${this.constructor.name} ]: Please set isRange option to true for use time range functionality`)
+        return
+      }
+
+      if (dayOrRange instanceof Day) {
+        this.selectedRange$.next({ start: dayOrRange.date, end: dayOrRange.date })
+      }
+
+      return
+    }
+
+    if (!(dayOrRange instanceof Day)) {
+      this.selectedRange$.next(dayOrRange)
       return
     }
 
     if (this.tempTimeRange.start === null && this.tempTimeRange.end === null) {
-      this.tempTimeRange.start = day.date
+      this.tempTimeRange.start = startOfDay(dayOrRange.date)
       return
     }
 
-    if (this.tempTimeRange.start !== null && isBefore(day.date, this.tempTimeRange.start)) {
-      this.tempTimeRange.start === day.date
+    if (this.tempTimeRange.start !== null && isBefore(dayOrRange.date, this.tempTimeRange.start)) {
+      this.tempTimeRange.start === startOfDay(dayOrRange.date)
       return
     }
 
     if (this.tempTimeRange.start !== null &&
         this.tempTimeRange.end === null &&
-        isAfter(day.date, this.tempTimeRange.start)) {
-      this.tempTimeRange.end = day.date
+        isAfter(dayOrRange.date, this.tempTimeRange.start)) {
+
+      this.tempTimeRange.end = endOfDay(dayOrRange.date)
       this.selectedRange$.next(this.tempTimeRange)
 
       this.tempTimeRange = { start: null, end: null }
