@@ -8,12 +8,15 @@ export interface TimeRange {
 export interface DatepickerOptions {
   displayMonth: number
   isRange?: boolean
+  monthSupplement?: boolean
 }
 
 export const DEFAULT_DATEPICKER_OPTIONS: Partial<DatepickerOptions> = {
-  isRange: false
+  isRange: false,
+  monthSupplement: false
 }
 
 export interface ControllerData {
   selectedRange$: Observable<TimeRange>
+  options: DatepickerOptions
 }

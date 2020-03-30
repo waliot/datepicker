@@ -1,4 +1,4 @@
-import { addDays, addWeeks, format, getISODay, getISOWeek, parseISO, startOfMonth, subDays } from 'date-fns'
+import { addDays, addWeeks, format, getISODay, getISOWeek, getMonth, parseISO, startOfMonth, subDays } from 'date-fns'
 import { ControllerData } from './datepicker'
 import { Day } from './day'
 
@@ -55,6 +55,11 @@ export class Month {
 
       for (let i = 0; i < 7; i++) {
         const day = new Day(addDays(firstDay, i), this.controllerData)
+
+        if (getMonth(day.date) !== getMonth(this.date)) {
+          continue
+        }
+
         this.days.push(day)
       }
     }

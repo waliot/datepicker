@@ -1,11 +1,11 @@
 import { BehaviorSubject } from 'rxjs'
-import { addMonths, endOfToday, isAfter, startOfToday, subMonths, isBefore } from 'date-fns'
+import { addMonths, endOfToday, isAfter, isBefore, startOfToday, subMonths } from 'date-fns'
 
 import { Month } from './month'
 import { ControllerData, DatepickerOptions, DEFAULT_DATEPICKER_OPTIONS, TimeRange } from './datepicker'
 import { Day } from './day'
 
-export class DatepickerController implements ControllerData {
+export class DatepickerController {
   private options: DatepickerOptions
   private tempTimeRange: TimeRange = { start: null, end: null }
 
@@ -14,6 +14,13 @@ export class DatepickerController implements ControllerData {
     start: startOfToday(),
     end: endOfToday()
   })
+
+  public get controllerData(): ControllerData {
+    return {
+      selectedRange$: this.selectedRange$,
+      options: this.options
+    }
+  }
 
   constructor(options: DatepickerOptions) {
     this.options = Object.assign(DEFAULT_DATEPICKER_OPTIONS, options)
@@ -24,13 +31,15 @@ export class DatepickerController implements ControllerData {
 
   public next(count: number = 1) {
     if (count === 0 || count === null || typeof count === 'undefined') return
-    const newMonths = this.months$.value.map(month => new Month(addMonths(month.date, count), this))
+    const newMonths = this.months$.value.map(month => new Month(addMonths(month.date, count), this.controllerData))
+
     this.months$.next(newMonths)
   }
 
   public prev(count: number = 1) {
     if (count === 0 || count === null || typeof count === 'undefined') return
-    const newMonths = this.months$.value.map(month => new Month(subMonths(month.date, count), this))
+    const newMonths = this.months$.value.map(month => new Month(subMonths(month.date, count), this.controllerData))
+
     this.months$.next(newMonths)
   }
 
@@ -69,14 +78,14 @@ export class DatepickerController implements ControllerData {
       this.options.displayMonth === null ||
       typeof this.options.displayMonth === 'undefined'
     ) {
-      this.months$.next([ new Month(today, this) ])
+      this.months$.next([ new Month(today, this.controllerData) ])
       return
     }
 
     const months = []
 
     for (let i = 0; i < this.options.displayMonth; i++) {
-      const month = new Month(addMonths(today, i), this)
+      const month = new Month(addMonths(today, i), this.controllerData)
       months.push(month)
     }
 
