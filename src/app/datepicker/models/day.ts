@@ -1,6 +1,7 @@
 import { ControllerData } from './datepicker'
 import { map } from 'rxjs/operators'
 import { isEqual, isToday, isWithinInterval } from 'date-fns'
+import { of } from 'rxjs'
 
 export enum WeekDayName {
   mon = 'MONDAY',
@@ -26,6 +27,14 @@ export class Day {
         // 'is-in-prev-month':
       }
     })
+  )
+
+  public customProperties$ = of({
+    '--custom': '#333'
+  }).pipe(
+    map((properties) =>
+      Object.entries(properties).reduce((acc, [ key, value ]) =>
+        acc.length === 0 ? `${key}: ${value}` : `${acc};${key}: ${value}`, ''))
   )
 
   constructor(public date: Date,

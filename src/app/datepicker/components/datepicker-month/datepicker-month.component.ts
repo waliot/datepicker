@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core'
 import { Day, Month } from '../../models'
+import { DomSanitizer } from '@angular/platform-browser'
 
 @Component({
   selector: 'app-datepicker-month',
@@ -18,7 +19,7 @@ export class DatepickerMonthComponent {
   @Output('select')
   public select$ = new EventEmitter<Day>()
 
-  constructor() { }
+  constructor(public sanitizer: DomSanitizer) { }
 
   public selectDay(day: Day) {
     this.select$.emit(day)
