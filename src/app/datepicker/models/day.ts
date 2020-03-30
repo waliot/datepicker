@@ -53,10 +53,23 @@ export class Day {
               private controllerData: ControllerData) {
   }
 
+  /**
+   * @description
+   * ### Выбрать этот день
+   * Метод позволяющий выбрать этот день в календаре
+   *
+   * @todo: Требует реализации
+   * Нужно сделать самокотролируемый класс
+   *
+   * @deprecated
+   */
   public select() {
 
   }
 
+  /**
+   * @todo: Реализовать наведение, так как сейчас не понятно какой интервал будет выбран
+   */
   public mouseEnterHandler() {
 
   }
