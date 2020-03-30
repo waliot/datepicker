@@ -1,6 +1,6 @@
 import { ControllerData } from './datepicker'
 import { map } from 'rxjs/operators'
-import { isEqual, isToday, isWithinInterval } from 'date-fns'
+import { getISODay, isEqual, isToday, isWithinInterval } from 'date-fns'
 import { of } from 'rxjs'
 
 export enum WeekDayName {
@@ -15,6 +15,10 @@ export enum WeekDayName {
 
 export class Day {
 
+  private get isFirstDayOfMonth() {
+    return this.date.getDate() === 1
+  }
+
   public cssClasses$ = this.controllerData.selectedRange$.pipe(
     map((range) => {
       return {
@@ -24,21 +28,28 @@ export class Day {
         'is-range-edge': isEqual(this.date, range.start) || isEqual(this.date, range.end),
         'is-range-edge-start': isEqual(this.date, range.start),
         'is-range-edge-end': isEqual(this.date, range.end),
+        'is-first-day-of-month': this.isFirstDayOfMonth
         // 'is-in-prev-month':
       }
     })
   )
 
   public customProperties$ = of({
-    '--custom': '#333'
+    '--first-day-shift': getISODay(this.date)
   }).pipe(
-    map((properties) =>
-      Object.entries(properties).reduce((acc, [ key, value ]) =>
-        acc.length === 0 ? `${key}: ${value}` : `${acc};${key}: ${value}`, ''))
+    map((properties) => {
+      // todo: Приводит к `style='null'` если условие срабатывает, а атрибуты вообще быть не должно
+      if (!this.isFirstDayOfMonth) return null
+
+      return Object.entries(properties).reduce((acc, [ key, value ]) => {
+        const newProperty = `${ key }: ${ value }`
+        if (acc.length === 0) return newProperty
+        return `${ acc }; ${ newProperty }`
+      }, '')
+    })
   )
 
   constructor(public date: Date,
               private controllerData: ControllerData) {
-    // this.weekDay = format(date, 'iiii').toUpperCase() as WeekDayName
   }
 }

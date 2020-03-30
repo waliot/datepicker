@@ -28,6 +28,18 @@
   height: 2rem;
 }*/
 
+.days-container,
+.week-names-container {
+  display: grid;
+  grid-template-columns: repeat(7, 2rem);
+  grid-auto-rows: 2rem;
+}
+
+.week-name {
+  text-align: center;
+  padding: .4rem 0;
+}
+
 .month-name-container {
   text-align: center;
 }
@@ -74,14 +86,6 @@
   background-color: lightskyblue;
 }
 
-.days-container,
-.week-names-container {
-  display: grid;
-  grid-template-columns: repeat(7, 2rem);
-  grid-auto-rows: 2rem;
-}
-
-.week-name {
-  text-align: center;
-  padding: .4rem 0;
+.is-first-day-of-month {
+  grid-column-start: var(--first-day-shift, auto);
 }

@@ -10,22 +10,12 @@
   <div class="week-name">Сб</div>
   <div class="week-name">Вс</div>
 </div>
-<!--<div class="week" *ngFor="let week of month.weeks">
+<div class="days-container">
   <button
     class="day"
     (click)="selectDay(day)"
     [ngClass]="day.cssClasses$ | async"
-    *ngFor="let day of week.days"
+    [attr.style]="sanitizer.bypassSecurityTrustStyle(day.customProperties$ | async)"
+    *ngFor="let day of month.days"
   >{{ day.date.getDate() }}</button>
-</div>-->
-<div class="days-container">
-  <ng-container *ngFor="let week of month.weeks">
-    <button
-      class="day"
-      (click)="selectDay(day)"
-      [ngClass]="day.cssClasses$ | async"
-      [attr.style]="sanitizer.bypassSecurityTrustStyle(day.customProperties$ | async)"
-      *ngFor="let day of week.days"
-    >{{ day.date.getDate() }}</button>
-  </ng-container>
 </div>

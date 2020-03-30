@@ -1,6 +1,6 @@
-import { Week } from './week'
-import { addWeeks, format, getISODay, getISOWeek, startOfMonth, subDays } from 'date-fns'
+import { addDays, addWeeks, format, getISODay, getISOWeek, parseISO, startOfMonth, subDays } from 'date-fns'
 import { ControllerData } from './datepicker'
+import { Day } from './day'
 
 export enum MonthName {
   jan = 'JANUARY',
@@ -33,7 +33,7 @@ const monthTranslate = {
 }
 
 export class Month {
-  public weeks: Week[] = []
+  public days: Day[] = []
   public name: MonthName
 
   public get nameForView() {
@@ -49,8 +49,15 @@ export class Month {
 
     for (let i = 0; i < 6; i++) {
       const numberOfWeek = getISOWeek(addWeeks(firstDayInMonthWeek, i))
-      const week = new Week(numberOfWeek, this.controllerData, this.date.getFullYear())
-      this.weeks.push(week)
+
+      // https://en.wikipedia.org/wiki/ISO_week_date
+      const firstDay = parseISO(`${this.date.getFullYear()}-W${numberOfWeek.toString().padStart(2, '0')}-1`)
+
+      for (let i = 0; i < 7; i++) {
+        const day = new Day(addDays(firstDay, i), this.controllerData)
+        this.days.push(day)
+      }
     }
   }
+
 }
